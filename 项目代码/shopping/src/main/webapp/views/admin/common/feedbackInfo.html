@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
+<title>登陆</title>
+<link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css">
+<link rel="stylesheet" href="../../../css/relayui.css">
+</head>
+<body>
+<div class="layui-fluid" style="margin-top:5px;background:#f2f2f2;" >
+	<div class="layui-form">
+		<div class="layui-row layui-col-space15">
+			<div style="padding: 20px;">
+				<span class="layui-breadcrumb" style="visibility: visible;">
+		        	<a href="javascript:;" data-type="back">用户反馈</a><span lay-separator="">></span>
+		            <a><cite>反馈信息</cite></a>
+		        </span>
+	        </div>
+			<div class="layui-card">
+	        	<div class="layui-card-header">反馈信息</div>
+	          	<div class="layui-card-body">
+	          		<div class="layui-form-item">
+	          			<div class="layui-inline">
+				        	<label class="layui-form-label layui-font-grey">姓名</label>
+				          	<div class="layui-input-inline" id="name"></div>
+				        </div>
+			        
+				        <div class="layui-inline">
+				        	<label class="layui-form-label layui-font-grey">联系方式</label>
+				          	<div class="layui-input-inline" id="phone"></div>
+				        </div>
+				        <div class="layui-inline">
+				        	<label class="layui-form-label layui-font-grey">邮箱</label>
+				          	<div class="layui-input-inline" id="email"></div>
+				        </div>
+			        </div>
+			        <div class="layui-form-item">
+	          			<div class="layui-inline">
+				        	<label class="layui-form-label layui-font-grey">留言内容</label>
+				          	<div class="layui-inline" id="content"></div>
+				        </div>
+			        </div>
+			    </div>
+	         </div>
+        </div>
+	</div>
+</div>
+<script type="text/javascript" src="../../../js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../../../miui/miui.js"></script>
+<script type="text/javascript" src="../../../layuiadmin/layui/layui.js"></script>
+<script type="text/javascript">
+	
+layui.config({
+	base: '../../../layuiadmin/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index'], function(){
+	layui.define("form", function(e) {
+		let form = layui.form;
+		let element = layui.element;
+		form.render();
+		
+		var active = {
+  	    	back: function() {
+  	    		var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+  	    		parent.layer.close(index);
+  	    	}
+		};
+		
+		$('.layui-breadcrumb a').on('click', function(){
+			var type = $(this).data('type');
+		    active[type] ? active[type].call(this) : '';
+		});
+	});
+});
+
+
+</script>
+</body>
+</html>

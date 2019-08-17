@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf8">
+	<link rel="stylesheet" type="text/css" href="../js/pintu/pintuer.css">
+	<link rel="stylesheet" type="text/css" href="../css/base.css">
+	<link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="../../../layuiadmin/style/template.css" media="all">
+	<script type="text/javascript" src="../js/pintu/jquery.js"></script>
+	<script type="text/javascript" src="../js/pintu/pintuer.js"></script>
+	<script type="text/javascript" src="../js/forie/console-polyfill.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../../../miui/miui.js"></script>
+	<script type="text/javascript" src="../../../layuiadmin/layui/layui.js"></script>
+	
+	<script type="text/javascript">
+	function GetQueryString(name)
+	{
+	     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+	     var r = window.location.search.substr(1).match(reg);
+	     if(r!=null)return  unescape(r[2]); return null;
+	}
+	
+	function add() {
+		goodsId = GetQueryString("goodsId");
+		num = 1;
+		$.miui.ajax('post','/user/addItem',{userId:window.localStorage.userId,goodsId:goodsId, num:num}).then(res=>{
+			layer.msg("添加成功",{icon:1, time: 1500},function(){
+ 				window.location.href="shopcar.html";
+ 			});
+		});
+	}
+	
+		$(document).ready(function(){ 
+			layui.config({
+			    base: '../../../layuiadmin/' //静态资源所在路径
+			  }).extend({
+			    index: 'lib/index' //主入口模块
+			  }).use(['index','carousel','form','laypage'], function(){
+				  var form = layui.form;
+				  var laypage = layui.laypage;
+					bgInit();
+					$.miui.ajax('get','/keyword/1').then(res=>{
+						$("#nav div").attr("style",'background: url('+res.data.twoBarCodeImgUrl+') 50% 50% / cover;background-size: 100%; background-repeat: no-repeat;');
+						$("#produce").html(res.data.address);
+					});
+					$.miui.ajax('get','/goods/'+GetQueryString("goodsId")).then(res=>{
+						$("#imgUrl").attr('src',res.data.imgUrl);
+						$("#name").html(res.data.name);
+						$("#produce").html(res.data.address);
+						$("#price").html("￥"+res.data.price);
+					});
+			  });
+		});
+	</script>
+</head>
+<body>
+<div>
+	<div class="navbar bg-main bg-inverse">
+        <ul class="nav nav-menu nav-inline" id="nav">
+			<li><div class="logo" style=""></div></li>
+        </ul>
+         <a href="index.html" style="line-height:80px;">首页</a>
+        <a href="shopcar.html" style="line-height:80px;">我的购物车</a>
+        <a href="order.html" style="line-height:80px;">我的订单</a>
+		<div class="login-area margin-right margin-left">
+			<a class="nav-item" href="login.html" target="_self">登陆</a><span>/</span>
+			<a class="nav-item" href="register.html" target="_self">注册</a>
+		</div>
+		<div class="layui-form">
+			<div id="search" class="margin-right">
+				<input type="text" placeholder="搜索您想要的商品" name="name">
+				<button lay-submit lay-filter="goods-search"></button>
+			</div>
+		</div>
+    </div>
+</div>
+<div id="head" class="mainDiv">
+<div class="main">
+	<div class="line padding-big-top">
+		<div class="x12 padding-small-top padding-small-right">
+				<div class="panel">
+					<div class="panel-body heightR12">
+						<div class="cmdlist-container" style="width: 200px;background-color:#f2f2f2;margin:0 auto;">
+				            <a href="javascript:;">
+				              <img id="imgUrl" src="">
+				            </a>
+				            <a href="javascript:;">
+				              <div class="cmdlist-text">
+				              	<b id="name"></b>
+				                <p class="info" id="produce"></p>
+				                <div class="price">
+				                    <b id="price">￥</b>
+				                </div>
+				              </div>
+				            </a>
+				            
+				        </div>
+				        <div  style="text-align: center; margin-top:10px;">
+				        <button type="button" class="layui-btn layui-btn-green" onclick="add()">加入购物车</button>
+							<button type="button" class="layui-btn layui-btn-normal" onclick="">立刻购买</button>
+							</div>
+					</div>
+					
+				</div>
+			</div>
+	</div>
+</div>
+</div>
+</body>
+</html>

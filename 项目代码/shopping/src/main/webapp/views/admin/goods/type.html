@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
+<title>登陆</title>
+<link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css">
+<link rel="stylesheet" href="../../../css/relayui.css">
+</head>
+<body>
+<div class="layui-fluid" style="margin-top:5px;background:#f2f2f2;" >
+	<div class="layui-form">
+		<div class="layui-row layui-col-space15">
+			<div style="padding: 20px;">
+				<span class="layui-breadcrumb" style="visibility: visible;">
+		        	<a href="javascript:;" data-type="back">商品列表</a><span lay-separator="">></span>
+		            <a><cite>商品类型管理</cite></a>
+		        </span>
+	        </div>
+			<div class="layui-card">
+	        	<div class="layui-card-header">商品类型管理</div>
+	          	<div class="layui-card-body">
+	          		<div class="layui-form">
+						<div class="layui-form-item">
+							<div class="layui-inline">
+								<label class="layui-form-label">商品类型</label>
+								<div class="layui-input-block">
+									<input class="layui-input" style="width:212px;" type="text" name="name" placeholder="请输入商品类型">
+								</div>
+							</div>
+							<div class="layui-inline">
+								<button type="button" class="layui-btn layui-btn-normal" lay-submit lay-filter="goods-type-search">查找</button>
+							</div>
+							<div class="layui-inline" style="float:right;">
+								<button type="button" class="layui-btn layui-btn-normal" data-type="add">添加商品类型</button>
+							</div>
+						</div>
+					</div>
+	          		<table id="goodstype_table" lay-filter="goodstype_table"></table>
+	          		<script type="text/html" id="goodstype-table-toolbar">
+					<button class="miui-btn miui-btn-green" lay-event="edit">编辑</button>
+         			<button class="miui-btn miui-btn-red" lay-event="del">删除</button>
+        		</script>
+	          	</div>
+	        </div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="../../../js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../../../miui/miui.js"></script>
+<script type="text/javascript" src="../../../layuiadmin/layui/layui.js"></script>
+<script type="text/javascript">
+layui.config({
+	base: '../../../layuiadmin/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index'], function(){
+	layui.define(['form','table','element'], function(e) {
+		let form = layui.form;
+		let table = layui.table;
+		let element = layui.element;
+		
+		form.on('submit(goods-type-search)', function(data){
+	      	var field = data.field;
+	      	//执行重载
+	      	table.reload('goodstype_table', {
+	        	where: field,
+	        	page: {curr: 1}
+	      	});
+	    });
+		
+		table.render({
+			elem: '#goodstype_table'
+			,url: '/goodstype' 
+			,method: 'get'
+			,headers: {
+				Authorization: window.localStorage.token
+			}
+			,parseData: function(res){
+				return {
+			      	"code": res.code, //解析接口状态
+			      	"msg": res.message, //解析提示文本
+			      	"count": res.data.totalElements, //解析数据长度
+			     	"data": res.data.content //解析数据列表
+			    };
+			}
+			,response: {
+				statusName: 'code' //规定数据状态的字段名称，默认：code
+				,statusCode: 200 //规定成功的状态码，默认：0
+				,msgName: 'message' //规定状态信息的字段名称，默认：msg
+				,countName: 'count' //规定数据总数的字段名称，默认：count
+				,dataName: 'data' //规定数据列表的字段名称，默认：data
+			} 
+			,page: true //开启分页
+			,cols: [[ //表头
+				{field: 'goodstypeId', title: '序号', align:'center', width:150, fixed: 'left'},
+				{field: 'name', title: '类型名称', align:'center', minWidth: 200},
+				{title: "操作", width: 300, minWidth: 150, align: "center", fixed: "right", toolbar: "#goodstype-table-toolbar"},
+			]]
+		});
+		table.on("tool(goodstype_table)", function(e) {
+	        if ("del" === e.event) {
+	        	layer.confirm('确定删除吗?', function(index){
+	        		$.miui.ajax('delete','/goodstype/' + e.data.goodstypeId).then(res=>{
+	              		if(res.code != 200) layer.msg(res.message,{icon: 2});
+	  					else {
+	  						layer.msg("删除成功");
+	  						e.del();
+	  					}
+	              	});
+        		 	layer.close(index);
+        		});    
+	        } else if ("edit" === e.event) {
+	        	layer.prompt({
+	        		value: e.data.name,
+	        		title: '商品类型',
+	        	}, function(value, index, elem){
+	        		$.miui.ajax('put','/goodstype',{goodstypeId:e.data.goodstypeId, name: value}).then(res=>{
+	              		if(res.code != 200) layer.msg(res.message,{icon: 2});
+	  					else {
+	  						layer.msg("修改成功");
+	  						e.update(res.data);
+	  					}
+	              	});
+	        		layer.close(index);
+	        	});
+	        }
+	    });
+		
+		var active = {
+			add: function(){
+				layer.prompt({title: '商品类型名称'}, function(value, index, elem){
+					$.miui.ajax('post','/goodstype',{name:value}).then(res=>{
+	              		if(res.code != 200) layer.msg(res.message,{icon: 2});
+	  					else {
+	  						layer.msg("添加成功");
+	  						table.reload('goodstype_table');
+	  					}
+	              	});
+        		 	layer.close(index);
+				});
+  	    	},
+  	    	back: function() {
+  	    		var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+  	    		parent.layer.close(index);
+  	    	}
+		};
+		
+		$('.layui-btn').on('click', function(){
+			var type = $(this).data('type');
+		    active[type] ? active[type].call(this) : '';
+		});
+		
+		$('.layui-breadcrumb a').on('click', function(){
+			var type = $(this).data('type');
+		    active[type] ? active[type].call(this) : '';
+		});
+	});
+});
+
+
+</script>
+</body>
+</html>

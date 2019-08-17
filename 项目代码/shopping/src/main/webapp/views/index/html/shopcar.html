@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf8">
+	<link rel="stylesheet" type="text/css" href="../js/pintu/pintuer.css">
+	<link rel="stylesheet" type="text/css" href="../css/base.css">
+	<link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="../../../layuiadmin/style/template.css" media="all">
+	<script type="text/javascript" src="../js/pintu/jquery.js"></script>
+	<script type="text/javascript" src="../js/pintu/pintuer.js"></script>
+	<script type="text/javascript" src="../js/forie/console-polyfill.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+	<script type="text/javascript" src="../../../miui/miui.js"></script>
+	<script type="text/javascript" src="../../../layuiadmin/layui/layui.js"></script>
+	<style>
+		.layui-table-cell {
+			line-height: 60px;
+			height: 60px;
+		}
+	</style>
+	<script type="text/javascript">
+	function GetQueryString(name)
+	{
+	     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+	     var r = window.location.search.substr(1).match(reg);
+	     if(r!=null)return  unescape(r[2]); return null;
+	}
+	
+	function clear() {
+		layer.confirm('确定结算吗?', function(index){
+			layer.confirm('确定付款吗?', function(index){
+				var address = "广东省茂名市";
+	    		$.miui.ajax('post','/user/clearItem', {userId: window.localStorage.userId, address}).then(res=>{
+	    			layer.msg("下单成功",{icon:1, time: 1500},function(){
+	     				window.location.refresh();
+	     			});
+	          	});
+			});
+		});    
+	}
+	
+		$(document).ready(function(){ 
+			layui.config({
+			    base: '../../../layuiadmin/' //静态资源所在路径
+			  }).extend({
+			    index: 'lib/index' //主入口模块
+			  }).use(['index','form','table'], function(){
+				  let form = layui.form;
+					let table = layui.table;
+					$.miui.ajax('get','/keyword/1').then(res=>{
+						$("#nav div").attr("style",'background: url('+res.data.twoBarCodeImgUrl+') 50% 50% / cover;background-size: 100%; background-repeat: no-repeat;');
+						$("#produce").html(res.data.address);
+					});
+					
+					$.miui.ajax('get','/user/' + window.localStorage.userId).then(res=>{
+						table.render({
+							elem: '#table'
+							,data: res.data.itemList
+							,method: 'get'
+							,headers: {
+								Authorization: window.localStorage.token
+							}
+							,page: false //开启分页
+							,cols: [[ //表头
+								{field: 'imgUrl', title: '缩略图', align:'center', templet:function(d){
+									return '<img style="display: inline-block; width: 50%; height: 100%;" src='+d.goods.imgUrl+'>'; 
+								}},
+								{field: 'name', title: '商品名称', align:'center', templet:function(d){
+									return d.goods.name; 
+								}},
+								{field: 'price', title: '价格', align:'center', templet:function(d){
+									return d.goods.price; 
+								}},
+								{field: 'num', title: '数量', align:'center',edit:"text"}
+							]]
+						});
+						
+						
+						 var total = 0;
+						  $.each(res.data.itemList, function(index, item) {
+								total += parseInt(item.goods.price) * parseInt(item.num);
+						  });
+						  $("#total").html(total);
+						  
+						table.on('edit(table)', function(obj){ //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+							  var total = 0;
+							  $.each(res.data.itemList, function(index, item) {
+								  if(item.goods.goodsId != obj.data.goods.goodsId) {
+									  total += parseInt(item.goods.price) * parseInt(item.num);
+								  } else {
+									  total += parseInt(item.goods.price) * parseInt(obj.data.num);
+								  }
+							  });
+							  $("#total").html(total);
+						});
+	              	});
+					
+					
+					
+					
+					var active = {
+						clear : function() {
+							layer.confirm('确定结算吗?', function(index){
+								layer.confirm('确定付款吗?', function(index){
+									var address = "广东省茂名市";
+						    		$.miui.ajax('post','/user/clearItem', {userId: window.localStorage.userId, address}).then(res=>{
+						    			layer.msg("下单成功",{icon:1, time: 1500},function(){
+						     				location.reload();
+						     			});
+						          	});
+								});
+							});    
+						}
+					};
+					
+					$('.layui-btn').on('click', function(){
+						var type = $(this).data('type');
+					    active[type] ? active[type].call(this) : '';
+					});	
+			  });
+		});
+	</script>
+</head>
+<body>
+<div>
+	<div class="navbar bg-main bg-inverse">
+        <ul class="nav nav-menu nav-inline" id="nav">
+			<li><div class="logo" style=""></div></li>
+        </ul>
+        <a href="index.html" style="line-height:80px;">首页</a>
+        <a href="shopcar.html" style="line-height:80px;">我的购物车</a>
+        <a href="order.html" style="line-height:80px;">我的订单</a>
+		<div class="login-area margin-right margin-left">
+			<a class="nav-item" href="login.html" target="_self">登陆</a><span>/</span>
+			<a class="nav-item" href="register.html" target="_self">注册</a>
+		</div>
+		<div class="layui-form">
+			<div id="search" class="margin-right">
+				<input type="text" placeholder="搜索您想要的商品" name="name">
+				<button lay-submit lay-filter="goods-search"></button>
+			</div>
+		</div>
+    </div>
+</div>
+<div id="head" class="mainDiv">
+<div class="main">
+	<div class="line padding-big-top">
+		<div class="x12 padding-small-top padding-small-right">
+				<div class="panel">
+					<div class="panel-body heightR12">
+						<table id="table" lay-filter="table"></table>
+						<div style="text-align:right;">总价：￥<span id="total">0</span><button style="margin-left:10px;" type="button" class="layui-btn layui-btn-normal" data-type="clear">结算</button></div>
+					</div>
+					
+				</div>
+			</div>
+	</div>
+</div>
+</div>
+</body>
+</html>

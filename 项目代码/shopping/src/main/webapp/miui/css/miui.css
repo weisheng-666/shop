@@ -1,0 +1,230 @@
+body {
+    line-height: 24px;
+    font: 14px Helvetica Neue,Helvetica,PingFang SC,Tahoma,Arial,sans-serif;
+}
+
+*{
+	margin: 0;
+    padding: 0;
+}
+
+.miui-ico { 
+	display: inline-block;
+	vertical-align: top;	
+	position: absolute;
+    top: 16px;
+    left: 15px;
+    _left: -40px;
+    width: 30px;
+    height: 30px;
+	background: url(icon.png) no-repeat;
+}
+.miui-ico1 { background-position:-30px 0}
+.miui-ico2 { background-position:-60px 0}
+.miui-ico3 { background-position:-90px 0}
+.miui-ico4 { background-position:-120px 0}
+.miui-ico5 { background-position:-150px 0;}
+.miui-ico6 { background-position:-180px 0}
+
+.miui-tips {
+	position: fixed;
+    min-width: 180px;
+    background-color: #FFFFFF;
+    color: #666666;
+    border: 1px solid #D3D4D3;
+    box-shadow: none;	
+}
+
+.miui-tips .miui-content {
+	padding: 20px 20px 20px 55px;
+    text-align: left;
+}
+
+.miui-msg {
+	position: fixed;
+	min-width: 100px;
+    background-color: rgba(0,0,0,.6);
+    color: #fff;
+    border: none;
+	border-radius: 2px;
+}
+
+.miui-msg .miui-content {
+	padding: 12px 25px;
+    text-align: center;
+}
+
+.miui-form-item {
+    margin-bottom: 15px;
+    clear: both;
+}
+
+.miui-form-item:after {
+    content: '\20';
+    clear: both;
+    *zoom: 1;
+    display: block;
+    height: 0;
+}
+
+.miui-form-item .miui-input-inline {
+    float: left;
+    width: 500px;
+    margin-right: 10px;
+}
+
+.miui-input-inline {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.miui-form-label {
+    float: left;
+    display: block;
+    padding: 9px 15px;
+    width: 80px;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: right;
+}
+
+.miui-input, .miui-textarea {
+    display: block;
+    width: 100%;
+    padding-left: 10px;
+}
+
+.miui-input, .miui-select, .miui-textarea {
+    height: 38px;
+    line-height: 38px;
+    border: 1px solid #e6e6e6;
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+.miui-input:hover, .miui-input:focus {
+	border-color: #ccc;
+}
+
+.miui-form-radio {
+	display: inline-block;
+	line-height: 38px;
+	padding-right:20px;
+}
+
+.miui-form-radio>input {
+    margin-right: 5px;
+    padding-right: 10px;
+    cursor: pointer;
+    font-size: 0;
+}
+
+.miui-textarea {
+	display: block;
+    width: 100%;
+    min-height: 100px;
+    font-size: 16px;
+    height: auto;
+    line-height: 20px;
+    padding: 6px 10px;
+    resize: vertical;
+    border-width: 1px;
+    border-style: solid;
+    background-color: #fff;
+    border-radius: 2px;
+    border-color: #e6e6e6;
+    position: relative;
+    font-family: inherit;
+    font-size: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+}
+
+.miui-btn {
+    display: inline-block;
+    height: 38px;
+    line-height: 38px;
+    padding: 0 18px;
+    background-color: #108EE9;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.miui-btn-fluid {
+	width: 100%;
+}
+
+.miui-btn, .miui-input, .miui-select, .miui-textarea, .miui-upload-button {
+    outline: 0;
+    -webkit-appearance: none;
+    transition: all .3s;
+    -webkit-transition: all .3s;
+    box-sizing: border-box;
+}
+
+.miui-btn, .miui-edge, .miui-inline, img {
+    vertical-align: middle;
+}
+
+.miui-btn:hover {
+    opacity: .8;
+    filter: alpha(opacity=80);
+    color: #fff;
+}
+
+.miui-fluid {
+    position: relative;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+.miui-col-space10 {
+    margin: -5px;
+}
+
+.layui-col-space10>* {
+    padding: 5px;
+}
+
+.miui-col-space15 {
+    margin: -7.5px;
+}
+
+.layui-col-space15>* {
+    padding: 7.5px;
+}
+
+.miui-card {
+    margin-bottom: 15px;
+    border-radius: 2px;
+    background-color: #fff;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);
+}
+
+.miui-card-header {
+    position: relative;
+    height: 42px;
+    line-height: 42px;
+    padding: 0 15px;
+    border-bottom: 1px solid #f6f6f6;
+    color: #333;
+    border-radius: 2px 2px 0 0;
+    font-size: 14px;
+}
+
+.miui-card-body {
+    position: relative;
+    padding: 10px 15px;
+    line-height: 24px;
+}
+
+blockquote, body, button, dd, div, dl, dt, form, h1, h2, h3, h4, h5, h6, input, li, ol, p, pre, td, textarea, th, ul {
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}

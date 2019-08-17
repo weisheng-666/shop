@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
+<title>登陆</title>
+<link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css">
+<link rel="stylesheet" href="../../../css/relayui.css">
+</head>
+<body>
+<div class="layui-fluid" style="margin-top:15px;">
+	<div class="layui-row layui-col-space15">
+		<div class="layui-card">
+        	<div class="layui-card-header">用户信息</div>
+          	<div class="layui-card-body">
+          		<div class="layui-form">
+					<div class="layui-form-item">
+						<div class="layui-inline">
+							<label class="layui-form-label">姓名</label>
+							<div class="layui-input-block">
+								<input class="layui-input" style="width:262px;" type="text" name="name" placeholder="用户姓名">
+							</div>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<div class="layui-inline">
+							<label class="layui-form-label">注册时间</label>
+							<div class="layui-input-block">
+								<i class="layui-icon" style="position: absolute; right:10px;">&#xe637;</i>
+								<input type="text" class="layui-input" name="startTime" style="width:120px" id="startTime">
+							</div>
+						</div>~
+						<div class="layui-inline">
+							<div class="layui-block">
+								<i class="layui-icon" style="position: absolute; right:10px;">&#xe637;</i>
+								<input type="text" class="layui-input" name="endTime" style="width:120px" id="endTime">
+							</div>
+						</div>
+						<div class="layui-inline">
+							<button type="button" class="layui-btn layui-btn-normal" lay-submit lay-filter="user-search">查找</button>
+						</div>
+						<div class="layui-inline" style="float:right;">
+							<button type="button" class="layui-btn layui-btn-blue" data-type="" onclick="alert('未开发')">导出excel</button>
+							<button type="button" class="layui-btn layui-btn-normal" data-type="" onclick="alert('未开发')">导入excel</button>
+						</div>
+					</div>
+				</div>
+          		<table id="user_table" lay-filter="user_table"></table>
+          		<script type="text/html" id="user-table-toolbar">
+          			<button class="miui-btn miui-btn-green" lay-event="info">查看</button>
+        		</script>
+          	</div>
+        </div>
+	</div>
+</div>
+<script type="text/javascript" src="../../../js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../../../miui/miui.js"></script>
+<script type="text/javascript" src="../../../layuiadmin/layui/layui.js"></script>
+<script type="text/javascript">
+layui.config({
+	base: '../../../layuiadmin/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index'], function(){
+	layui.define(['form','table','element','laydate'], function(e) {
+		let form = layui.form;
+		let table = layui.table;
+		let element = layui.element;
+		let laydate = layui.laydate;
+		
+		laydate.render({
+		 	elem: '#startTime' //指定元素
+		});
+		
+		laydate.render({
+		 	elem: '#endTime' //指定元素
+		});
+		
+		form.on('submit(user-search)', function(data){
+	      	var field = data.field;
+	      	if(data.field.endTime != "") data.field.endTime = data.field.endTime.slice(0,8) + (parseInt(data.field.endTime.slice(8,10))+1);
+	        
+	      	//执行重载
+	      	table.reload('user_table', {
+	        	where: field,
+	        	page: {curr: 1}
+	      	});
+	    });
+		
+		table.render({
+			elem: '#user_table'
+			,url: '/user' 
+			,method: 'get'
+			,headers: {
+				Authorization: window.localStorage.token
+			}
+			,parseData: function(res){
+				return {
+			      	"code": res.code, //解析接口状态
+			      	"msg": res.message, //解析提示文本
+			      	"count": res.data.totalElements, //解析数据长度
+			     	"data": res.data.content //解析数据列表
+			    };
+			}
+			,response: {
+				statusName: 'code' //规定数据状态的字段名称，默认：code
+				,statusCode: 200 //规定成功的状态码，默认：0
+				,msgName: 'message' //规定状态信息的字段名称，默认：msg
+				,countName: 'count' //规定数据总数的字段名称，默认：count
+				,dataName: 'data' //规定数据列表的字段名称，默认：data
+			} 
+			,page: true //开启分页
+			,cols: [[ //表头
+				{field: 'id', title: '序号', align:'center', width:70, fixed: 'left'},
+				{field: 'phone', title: '手机号', align:'center', width: 150},
+				{field: 'username', title: '姓名', align:'center', width: 150},
+				{field: 'createTime', title: '注册时间', align:'center', width: 200, templet:function(d){
+					return d.createTime.slice(0,10);
+				}},
+				{field: 'createTime', title: '付费账号', align:'center', width: 200, templet:function(d){
+					if(d.isVip == 1) return '<span class="layui-font-green">有</span>';
+					else return "无";
+					return d.createTime.slice(0,10);
+				}},
+				{title: "操作", minWidth: 150, align: "center", fixed: "right", toolbar: "#user-table-toolbar"},
+			]]
+		});
+		table.on("tool(user_table)", function(e) {
+	        if ("info" === e.event) {
+	        	var index = layer.open({
+  	    			type:2,
+  	    			title: false,
+  	    			content: 'info.html',
+  	    			closeBtn: 0,
+  	    			fixed: false,
+  	    			btn:[],
+  	    			success: function(layero, index){
+  	    				
+  	    			}
+  	    		});
+  	    		layer.full(index);
+	        }
+	    });
+	});
+});
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+1. shopping文件夹为我们的源代码，将其导入eclipse中
+2. 将shopping.sql导入数据库中
+3. 修改tomcat配置，把项目路径名由‘/shopping’ 改为‘/’
+4. 导入文件，把files文件夹（保存了商品、轮播图的图片数据）复制到tomcat服务器目录。（一般为webapps目录下，和shopping同目录）
+5. 启动tomcat
+6. 后台目录，localhost:8080/views/admin/
+7. 前台目录，localhost:8080/views/index/html/

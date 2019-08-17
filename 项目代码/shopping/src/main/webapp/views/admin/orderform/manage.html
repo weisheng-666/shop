@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
+<title>登陆</title>
+<link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css">
+<link rel="stylesheet" href="../../../css/relayui.css">
+<style>
+		.layui-table-cell {
+			line-height: 60px;
+			height: auto;
+		}
+	</style>
+</head>
+<body>
+<div class="layui-fluid" style="margin-top:15px;">
+	<div class="layui-row layui-col-space15">
+		<div class="layui-card">
+        	<div class="layui-card-header">用户信息</div>
+          	<div class="layui-card-body">
+          		<div class="layui-form">
+					<div class="layui-form-item">
+						<div class="layui-inline">
+							<label class="layui-form-label">用户名</label>
+							<div class="layui-input-block">
+								<input class="layui-input" style="width:262px;" type="text" name="name" placeholder="用户名">
+							</div>
+						</div>
+					</div>
+				</div>
+          		<table id="orderform_table" lay-filter="orderform_table"></table>
+          		<script type="text/html" id="orderform-table-toolbar">
+          			{{#  if(d.status == 1){ }}
+    <button class="layui-btn layui-btn-normal" lay-event="confirm">确认发货</button>
+  {{#  } else if (d.status == 2){ }}
+    已发货
+  {{#  } else { }}
+    已收货
+  {{#  }}}
+        		</script>
+          	</div>
+        </div>
+	</div>
+</div>
+<script type="text/javascript" src="../../../js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../../../miui/miui.js"></script>
+<script type="text/javascript" src="../../../layuiadmin/layui/layui.js"></script>
+<script type="text/javascript">
+layui.config({
+	base: '../../../layuiadmin/' //静态资源所在路径
+}).extend({
+    index: 'lib/index' //主入口模块
+}).use(['index'], function(){
+	layui.define(['form','table','element','laydate'], function(e) {
+		let form = layui.form;
+		let table = layui.table;
+		let element = layui.element;
+		let laydate = layui.laydate;
+		
+		laydate.render({
+		 	elem: '#startTime' //指定元素
+		});
+		
+		laydate.render({
+		 	elem: '#endTime' //指定元素
+		});
+		
+		form.on('submit(orderform-search)', function(data){
+	      	var field = data.field;
+	      	if(data.field.endTime != "") data.field.endTime = data.field.endTime.slice(0,8) + (parseInt(data.field.endTime.slice(8,10))+1);
+	        
+	      	//执行重载
+	      	table.reload('orderform_table', {
+	        	where: field,
+	        	page: {curr: 1}
+	      	});
+	    });
+		
+		table.render({
+			elem: '#orderform_table'
+			,url: '/orderform' 
+			,method: 'get'
+			,headers: {
+				Authorization: window.localStorage.token
+			}
+			,parseData: function(res){
+				return {
+			      	"code": res.code, //解析接口状态
+			      	"msg": res.message, //解析提示文本
+			      	"count": res.data.totalElements, //解析数据长度
+			     	"data": res.data.content //解析数据列表
+			    };
+			}
+			,response: {
+				statusName: 'code' //规定数据状态的字段名称，默认：code
+				,statusCode: 200 //规定成功的状态码，默认：0
+				,msgName: 'message' //规定状态信息的字段名称，默认：msg
+				,countName: 'count' //规定数据总数的字段名称，默认：count
+				,dataName: 'data' //规定数据列表的字段名称，默认：data
+			} 
+			,page: true //开启分页
+			,cols: [[ //表头
+				{title: '用户名', align:'left', width: 100, templet:function(d){
+					return d.user.username;
+				}},
+				{field: 'itemList', title: '商品信息', align:'left', width: 300, templet:function(d){
+					var str = "";
+					$.each(d.itemList, function(index, item) {
+						str += '<p><img style="display: inline-block; margin-right:10px;width: 100;" src='+item.goods.imgUrl+'>&nbsp;'+item.goods.name+'&nbsp;数量：'+item.num+'&nbsp;</p>';
+					})
+					return str; 
+				}},
+				{field: 'address', title: '地址', width: 200, align:'center'},
+				{field: 'payStatus', title: '支付状态', align:'center',width: 100, templet:function(d){
+					return "已付款"; 
+				}},
+				{field: 'status', title: '订单	状态', align:'center',width: 100, templet:function(d){
+					var map = {
+						'1':'未发货',
+						'2':'已发货',
+						'3':'已接收'
+					}
+						return map[d.status];
+				}},
+				{field: 'price', title: '总价', align:'center', templet:function(d){
+					return d.price; 
+				}},
+				{title: "操作", minWidth: 150, align: "center", fixed: "right", toolbar: "#orderform-table-toolbar"},
+			]]
+		});
+		table.on("tool(orderform_table)", function(e) {
+	        if ("confirm" === e.event) {
+	        	layer.confirm('确认发货吗?', function(index){
+	        		$.miui.ajax('put','/orderform', {orderformId: e.data.orderformId, status: 2}).then(res=>{
+	              		table.reload("orderform_table");
+	              	});
+        		 	layer.close(index);
+        		});    
+	        }
+	    });
+	});
+});
+
+
+</script>
+</body>
+</html>

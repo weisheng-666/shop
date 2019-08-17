@@ -1,0 +1,163 @@
+.red-point {
+    color: red;
+    font-weight: bold;
+    font-size: 20px;
+    padding-right:10px;
+    float: left;
+}
+
+.miui-icon {
+	display:inline-block;
+	position: absolute;
+    top: 50%;
+    left: 20px;
+    margin-top: -19px;
+	width:20px;
+	height:38px;
+}
+
+.miui-icon-course {
+	background:url(/css/icon/icon_sidebar_course.png) no-repeat center;
+	background-size:100%;
+}
+
+.miui-icon-class {
+	background:url(/css/icon/icon_sidebar_class.png) no-repeat center;
+	background-size:100%;
+}
+
+.miui-icon-works {
+	background:url(/css/icon/icon_sidebar_works.png) no-repeat center;
+	background-size:100%;
+}
+
+.miui-icon-platform {
+	background:url(/css/icon/icon_sidebar_platform.png) no-repeat center;
+	background-size:100%;
+}
+
+.miui-icon-student {
+	background:url(/css/icon/icon_sidebar_student.png) no-repeat center;
+	background-size:100%;
+}
+
+.miui-icon-user {
+	background:url(/css/icon/icon_sidebar_user.png) no-repeat center;
+	background-size:100%;
+}
+
+.miui-fileUpload {
+	border: 2px dashed #C0C0C0; 
+	background: #FAFAFA; 
+	display:inline-block; 
+	width:150px; 
+	height:100px; 
+	border-radius: 5px;
+	text-align:center; 
+	padding:25px 60px;
+	cursor:pointer;
+	line-height: 24px;
+}
+
+.layui-footer {
+	position: relative;
+	padding: 10px 0;
+    text-align: center;
+}
+
+.layui-rate {
+	padding: 0px;
+}
+
+.layui-form-item .layui-inline {
+    margin-bottom: 0px;
+    margin-right: 10px;
+}
+
+.layui-card-header {
+	font-weight: bold;	
+}
+
+.layui-font-grey {
+	color: #C2C2C2;
+}
+
+.layui-font-green {
+	color: #04CA97;
+}
+
+.layui-font-red {
+	color: #FF9797;
+}
+
+.layui-font-cd {
+	color:#CDCDCD;
+}
+
+.layui-font-99 {
+	color:#999999;
+}
+
+.layui-input-inline,  .layui-inline{
+	line-height: 38px;
+}
+
+.layui-form-label.layui-font-grey {
+	width: 100px;
+	padding: 9px 25px 9px 0px;
+}
+
+.layui-btn-green {
+	background-color:#04CA97 !important;
+}
+
+.miui-btn {
+	background-color: #fff;
+	padding: 5px 10px;
+	border-radius: 5px;
+	margin: 5px 10px;
+	cursor: pointer;
+}
+
+.miui-btn-green {
+	border: 1px solid #48D9B3;
+	color: #7DE4CA;
+}
+
+.miui-btn-red {
+	border: 1px solid #FF6C6C;
+	color: #FF9797;	
+}
+
+.miui-btn-blue {
+	border: 1px solid #1E9FFF;
+	color: #48A0F9;	
+}
+
+.layui-btn-blue {
+	border: 1px solid #1E9FFF;
+	background-color: #fff;
+	color: #48A0F9;	
+}
+
+.layui-btn-blue:hover {
+	color: #48A0F9;	
+}
+
+.layui-table-view .layui-table td, .layui-table-view .layui-table th {
+    padding: 8px 0;
+    border-top: none;
+    border-left: none;
+}
+
+.layui-table-cell {
+    height: 38px;
+    line-height: 38px;
+    padding: 0 15px;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.layui-table-click, .layui-table-hover {
+	background-color: #fff !important;
+}

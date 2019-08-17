@@ -1,0 +1,33 @@
+
+教程文档
+
+http://v3.bootcss.com/
+https://getbootstrap.com/
+
+定制版组件：
+http://v3.bootcss.com/customize/
+
+       通用 CSS :	Print media styles 、Typography 、Grid system 、Forms 、Buttons
+					     排版         栅格系统      表单    按钮
+
+           组件 :	Glyphicons 、Button groups 、Input groups 、Labels
+			字体图标     按钮组          输入框组       标签
+
+JavaScript 插件 : 	
+
+
+    jQuery 插件 : 	Alert dismissal 、Advanced buttons
+			警告框            按钮
+
+
+20161230	v3.3.0
+http://v3.bootcss.com/customize/?id=e84d27eae6c31189c499bf278963c476
+https://gist.github.com/e84d27eae6c31189c499bf278963c476
+
+	增加 Labels、bootstrap-tagsinput
+
+20160402	v3.3.5
+http://v3.bootcss.com/customize/?id=937deeea569954686af5dbc0fa9c5841
+
+	增加按钮组自定义样式(btn-group)
+
